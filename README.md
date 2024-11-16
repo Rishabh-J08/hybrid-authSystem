@@ -36,5 +36,5 @@ This is an authentication system that supports both **passwordless (OTP-based)**
 
 1. Clone the repository:
    ```bash
-   https://github.com/Rishabh-J08/hybrid-authSystem.git
+   git clone https://github.com/Rishabh-J08/hybrid-authSystem.git
    cd hybrid-authSystem
