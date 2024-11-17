@@ -7,6 +7,8 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twilio = require("twilio");
 const client = twilio(accountSid, authToken);
+const utils = require("../utils/utlis");
+const { Fido2Lib } = require("fido2-lib");
 
 //signup logic
 
@@ -117,3 +119,28 @@ exports.verifyOtp = async (req, res) => {
     console.error("error while verifying" + error.message);
   }
 };
+
+// fingerprint signup
+
+exports.fingerpirntSignup =  async(req, res) => {
+  const {email,phoneNumber, domainName} = req.body;
+  try {
+    const user = await User.findOne({email})
+    if(!user){
+      res.status(404).json({message: "User not found"})
+    }
+    const fido2 = new Fido2Lib({
+      timeout: 60000,
+      rpId: domainName,
+      rpName: "Your App Name",
+      attestation: "direct",
+      challengeSize: 64,
+    });
+    const registrationOptions = fido2.attestationOptions();
+    user.fingerprintChallenge = registrationOptions.challenge;
+    await user.save() 
+    res.json({registrationOptions})
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}

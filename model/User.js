@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
     username:{
         type: String,
-        reqired: true,
+        required: true,
         unique: true
     },
     password:{
@@ -15,6 +15,26 @@ const userSchema = new mongoose.Schema({
     email:{
         type: String,
         required: true,
+        unique: true
+    },
+    phoneNumber:{
+        type: String,
+        required: false,
+        unique: true
+    },
+    fingerprintKey:{
+        type: String,
+        required: false,
+     },
+    fingerprintChallenge: {
+        type: String,
+        required: false,
+        unique: true,
+        default: null
+    },
+    domainName: {  // this will be required when we have to use fingerprint logine 
+        type: String, 
+        required: false,
         unique: true
     }
 });
